@@ -58,15 +58,12 @@ type WeatherData = {
 };
 
 export default function Home() {
-  const { isLoading, error, data } = useQuery<WeatherData>(
-    "repoData",
-    async () => {
-      const { data } = await axios.get(
-        `https://api.openweathermap.org/data/2.5/forecast?q=rajshahi&appid=${process.env.NEXT_PUBLIC_WEATHER_API_KEY}`
-      );
-      return data;
-    }
-  );
+  const { isLoading, data } = useQuery<WeatherData>("weatherData", async () => {
+    const { data } = await axios.get(
+      `https://api.openweathermap.org/data/2.5/forecast?q=rajshahi&appid=${process.env.NEXT_PUBLIC_WEATHER_API_KEY}`
+    );
+    return data;
+  });
 
   return (
     <div className="flex flex-col gap-4 bg-gray-100 min-h-screen">
