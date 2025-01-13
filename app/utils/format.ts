@@ -11,3 +11,11 @@ export function getDayOrNightIcon(
 
   return isDayTime ? iconName.replace(/.$/, "d") : iconName.replace(/.$/, "n");
 }
+
+export function metersToKilometers(meters: number): string {
+  return `${(meters / 1000).toFixed(0)}km`;
+}
+
+export function convertWindSpeed(speedInMetersPerSecond: number): string {
+  return `${(speedInMetersPerSecond * 3.6).toFixed(0)}km/h`;
+}
