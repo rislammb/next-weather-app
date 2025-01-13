@@ -5,7 +5,8 @@ import Navbar from "./components/Navbar";
 import axios from "axios";
 import { format } from "date-fns";
 import Container from "./components/Container";
-import { convertKelvinToCelsius } from "./utils/format";
+import { convertKelvinToCelsius, getDayOrNightIcon } from "./utils/format";
+import WeatherIcon from "./components/WeatherIcon";
 
 type WeatherData = {
   cod: string;
@@ -87,7 +88,7 @@ export default function Home() {
                   ({format(firstData?.dt_txt ?? "", "dd.MM.yyyy")})
                 </span>
               </h1>
-              <Container className="gap-10 px-6 items-center">
+              <Container className="gap-4 sm:gap-6 px-6 items-center">
                 <div className="flex flex-col px-4">
                   <h4 className="text-5xl">
                     {convertKelvinToCelsius(firstData?.main.temp ?? 0)}°
@@ -106,6 +107,25 @@ export default function Home() {
                       {convertKelvinToCelsius(firstData?.main.temp_max ?? 0)}°↑
                     </span>
                   </p>
+                </div>
+                <div className="flex gap-4 sm:gap-6 overflow-x-auto w-full justify-between pr-3">
+                  {data?.list?.map((item, index) => (
+                    <div
+                      key={index}
+                      className="flex flex-col justify-between gap-2 items-center text-xs font-semibold"
+                    >
+                      <p className="whitespace-nowrap">
+                        {format(item?.dt_txt, "h:mm a")}
+                      </p>
+                      <WeatherIcon
+                        iconName={getDayOrNightIcon(
+                          item?.weather[0]?.icon,
+                          item.dt_txt
+                        )}
+                      />
+                      <p>{convertKelvinToCelsius(item?.main?.temp ?? 0)}°</p>
+                    </div>
+                  ))}
                 </div>
               </Container>
             </div>
