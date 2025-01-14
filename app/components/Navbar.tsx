@@ -58,7 +58,7 @@ export default function Navbar({ location }: { location: string }) {
   const [error, setError] = useState<string>("");
   const [suggestions, setSuggestions] = useState<string[]>([]);
   const [showSuggestions, setShowSuggestions] = useState<boolean>(false);
-  const [place, setPlace] = useAtom(placeAtom);
+  const [, setPlace] = useAtom(placeAtom);
 
   async function handleInputChange(value: string) {
     setCity(value);
@@ -71,7 +71,7 @@ export default function Navbar({ location }: { location: string }) {
         setSuggestions(response.data?.list?.map((item) => item.name));
         setError("");
         setShowSuggestions(true);
-      } catch (error) {
+      } catch {
         setSuggestions([]);
         setShowSuggestions(false);
       }
