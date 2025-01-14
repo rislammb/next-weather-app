@@ -13,6 +13,7 @@ import {
 } from "./utils/format";
 import WeatherIcon from "./components/WeatherIcon";
 import WeatherDetails from "./components/WeatherDetails";
+import ForcastWeatherDetails from "./components/ForcastWeatherDetails";
 
 type WeatherData = {
   cod: string;
@@ -76,6 +77,22 @@ export default function Home() {
   });
 
   const firstData = data?.list[0];
+
+  const uniqueDates = [
+    ...new Set(
+      data?.list?.map(
+        (entry) => new Date(entry?.dt * 1000).toISOString().split("T")[0]
+      )
+    ),
+  ];
+
+  const firstDataForEachDate = uniqueDates.map((date) => {
+    return data?.list.find((entry) => {
+      const entryDate = new Date(entry.dt * 1000).toISOString().split("T")[0];
+      const entryTime = new Date(entry.dt * 1000).getHours();
+      return entryDate === date && entryTime >= 6;
+    });
+  });
 
   return (
     <div className="flex flex-col gap-4 bg-gray-100 min-h-screen">
@@ -167,6 +184,28 @@ export default function Home() {
           </section>
           <section className="flex w-full flex-col gap-4">
             <h2 className="text-2xl">Forcast (5 days)</h2>
+            {firstDataForEachDate.map((entry, index) => (
+              <ForcastWeatherDetails
+                key={index}
+                weatherIcon={entry?.weather[0].icon ?? ""}
+                date={format(entry?.dt_txt ?? "", "dd.MM")}
+                day={format(entry?.dt_txt ?? "", "EEEE")}
+                temp={entry?.main.temp ?? 0}
+                feels_like={entry?.main.feels_like ?? 0}
+                temp_min={entry?.main.temp_min ?? 0}
+                temp_max={entry?.main.temp_max ?? 0}
+                description={entry?.weather[0].description ?? ""}
+                visibility={metersToKilometers(entry?.visibility ?? 0)}
+                humidity={`${entry?.main.humidity}%`}
+                windSpeed={convertWindSpeed(entry?.wind.speed ?? 0)}
+                airPressure={`${entry?.main.pressure} hPa`}
+                sunrise={format(
+                  fromUnixTime(data?.city?.sunrise ?? 0),
+                  "h:mm a"
+                )}
+                sunset={format(fromUnixTime(data?.city?.sunset ?? 0), "h:mm a")}
+              />
+            ))}
           </section>
         </main>
       )}

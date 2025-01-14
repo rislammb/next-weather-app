@@ -9,7 +9,7 @@ interface ForcastWeatherDetailsProps extends WeatherDetailsProps {
   day: string;
   temp: number;
   feels_like: number;
-  temp_main: number;
+  temp_min: number;
   temp_max: number;
   description: string;
 }
@@ -20,7 +20,7 @@ export default function ForcastWeatherDetails(
   return (
     <Container className="gap-4">
       <section className="flex gap-4 items-center px-4">
-        <div>
+        <div className="flex flex-col gap-1 items-center">
           <WeatherIcon iconName={props.weatherIcon} />
           <p>{props.date}</p>
           <p className="text-sm">{props.day}</p>
