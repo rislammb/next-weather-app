@@ -1,32 +1,37 @@
-// import { ChangeEventHandler, FormEventHandler } from "react";
+import { FormEvent } from "react";
 import { MdSearch } from "react-icons/md";
 import { cn } from "../utils/cn";
 
 interface SearchBoxProps {
   className?: string;
-  // value: string;
-  // onChange: ChangeEventHandler<HTMLInputElement> | undefined;
-  // onSubmit: FormEventHandler<HTMLFormElement> | undefined;
+  value: string;
+  onChange: (value: string) => void;
+  onSubmit: () => void;
 }
 
 export default function SearchBox({
   className,
-}: // value,
-// onChange,
-// onSubmit,
-SearchBoxProps) {
+  value,
+  onChange,
+  onSubmit,
+}: SearchBoxProps) {
+  function handleSubmit(e: FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    onSubmit();
+  }
+
   return (
     <form
       className={cn(
         "flex relative items-center justify-center h-10",
         className
       )}
-      // onSubmit={onSubmit}
+      onSubmit={handleSubmit}
     >
       <input
         type="text"
-        // value={value}
-        // onChange={onChange}
+        value={value}
+        onChange={(e) => onChange(e.target.value)}
         placeholder="Search location.."
         className="px-4 py-2 w-[230px] border border-gray-300 rounded-l-md focus:outline-none focus:border-blue-200 h-full"
       />

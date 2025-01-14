@@ -14,6 +14,9 @@ import {
 import WeatherIcon from "./components/WeatherIcon";
 import WeatherDetails from "./components/WeatherDetails";
 import ForcastWeatherDetails from "./components/ForcastWeatherDetails";
+import { placeAtom } from "./atom";
+import { useAtom } from "jotai";
+import { useEffect } from "react";
 
 type WeatherData = {
   cod: string;
@@ -69,12 +72,16 @@ type WeatherData = {
 };
 
 export default function Home() {
-  const { isLoading, data } = useQuery<WeatherData>("weatherData", async () => {
-    const { data } = await axios.get(
-      `https://api.openweathermap.org/data/2.5/forecast?q=rajshahi&appid=${process.env.NEXT_PUBLIC_WEATHER_API_KEY}`
-    );
-    return data;
-  });
+  const [place] = useAtom(placeAtom);
+  const { isLoading, data, refetch } = useQuery<WeatherData>(
+    "weatherData",
+    async () => {
+      const { data } = await axios.get(
+        `https://api.openweathermap.org/data/2.5/forecast?q=${place}&appid=${process.env.NEXT_PUBLIC_WEATHER_API_KEY}`
+      );
+      return data;
+    }
+  );
 
   const firstData = data?.list[0];
 
@@ -89,14 +96,19 @@ export default function Home() {
   const firstDataForEachDate = uniqueDates.map((date) => {
     return data?.list.find((entry) => {
       const entryDate = new Date(entry.dt * 1000).toISOString().split("T")[0];
-      const entryTime = new Date(entry.dt * 1000).getHours();
-      return entryDate === date && entryTime >= 6;
+      return entryDate === date;
     });
   });
 
+  useEffect(() => {
+    refetch();
+  }, [place]);
+
   return (
     <div className="flex flex-col gap-4 bg-gray-100 min-h-screen">
-      <Navbar />
+      <Navbar
+        location={data ? `${data?.city?.name}, ${data?.city?.country}` : ""}
+      />
       {isLoading ? (
         <main className="flex-1 flex items-center justify-center">
           <p className="animate-bounce">Loading...</p>
