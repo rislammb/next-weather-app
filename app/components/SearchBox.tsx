@@ -1,24 +1,36 @@
-import { FormEvent } from "react";
+"use client";
+
+import { ChangeEvent, FormEvent } from "react";
 import { MdSearch } from "react-icons/md";
-import { cn } from "../utils/cn";
+import { cn } from "../lib/cn";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { useDebouncedCallback } from "use-debounce";
 
 interface SearchBoxProps {
   className?: string;
-  value: string;
-  onChange: (value: string) => void;
-  onSubmit: () => void;
 }
 
-export default function SearchBox({
-  className,
-  value,
-  onChange,
-  onSubmit,
-}: SearchBoxProps) {
-  function handleSubmit(e: FormEvent<HTMLFormElement>) {
-    e.preventDefault();
-    onSubmit();
-  }
+export default function SearchBox({ className }: SearchBoxProps) {
+  const searchParams = useSearchParams();
+  const pathname = usePathname();
+  const { replace } = useRouter();
+
+  const handleChange = useDebouncedCallback(
+    (e: ChangeEvent<HTMLInputElement>) => {
+      const term = e.target.value;
+      const params = new URLSearchParams(searchParams);
+
+      if (term) {
+        params.set("place", term);
+      } else {
+        params.delete("place");
+      }
+      replace(`${pathname}?${params.toString()}`);
+    },
+    300
+  );
+
+  function handleSubmit() {}
 
   return (
     <form
@@ -26,12 +38,12 @@ export default function SearchBox({
         "flex relative items-center justify-center h-10",
         className
       )}
-      onSubmit={handleSubmit}
+      action={handleSubmit}
     >
       <input
         type="text"
-        value={value}
-        onChange={(e) => onChange(e.target.value)}
+        onChange={handleChange}
+        defaultValue={searchParams.get("place")?.toString()}
         placeholder="Search location.."
         className="px-4 py-2 w-[170px] border border-gray-300 rounded-l-md focus:outline-none focus:border-blue-200 h-full"
       />

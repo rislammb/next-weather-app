@@ -1,8 +1,4 @@
-"use client";
-
-import { useQuery } from "react-query";
-import Navbar from "./components/Navbar";
-import axios from "axios";
+import { Suspense } from "react";
 import { format, fromUnixTime } from "date-fns";
 import Container from "./components/Container";
 import {
@@ -10,81 +6,19 @@ import {
   convertWindSpeed,
   getDayOrNightIcon,
   metersToKilometers,
-} from "./utils/format";
+} from "./lib/format";
 import WeatherIcon from "./components/WeatherIcon";
 import WeatherDetails from "./components/WeatherDetails";
 import ForcastWeatherDetails from "./components/ForcastWeatherDetails";
-import { loadingCityAtom, placeAtom } from "./atom";
-import { useAtom } from "jotai";
-import { useEffect } from "react";
 import WeatherSkeleton from "./components/WeatherSkeleton";
+import { fetchWeatherData } from "./lib/data";
 
-type WeatherData = {
-  cod: string;
-  message: number;
-  cnt: number;
-  list: {
-    dt: number;
-    main: {
-      temp: number;
-      feels_like: number;
-      temp_min: number;
-      temp_max: number;
-      pressure: number;
-      sea_level: number;
-      grnd_level: number;
-      humidity: number;
-      temp_kf: number;
-    };
-    weather: {
-      id: number;
-      main: string;
-      description: string;
-      icon: string;
-    }[];
-    clouds: {
-      all: number;
-    };
-    wind: {
-      speed: number;
-      deg: number;
-      gust: number;
-    };
-    visibility: number;
-    pop: number;
-    sys: {
-      pod: string;
-    };
-    dt_txt: string;
-  }[];
-  city: {
-    id: number;
-    name: string;
-    coord: {
-      lat: number;
-      lon: number;
-    };
-    country: string;
-    population: number;
-    timezone: number;
-    sunrise: number;
-    sunset: number;
-  };
-};
-
-export default function Home() {
-  const [place] = useAtom(placeAtom);
-  const [loadingCity] = useAtom(loadingCityAtom);
-
-  const { isLoading, data, refetch } = useQuery<WeatherData>(
-    "weatherData",
-    async () => {
-      const { data } = await axios.get(
-        `https://api.openweathermap.org/data/2.5/forecast?q=${place}&appid=${process.env.NEXT_PUBLIC_WEATHER_API_KEY}`
-      );
-      return data;
-    }
-  );
+export default async function Home({
+  searchParams,
+}: {
+  searchParams?: { [key: string]: string | undefined };
+}) {
+  const data = await fetchWeatherData((await searchParams)?.place ?? "");
 
   const firstData = data?.list[0];
 
@@ -96,25 +30,16 @@ export default function Home() {
     ),
   ];
 
-  const firstDataForEachDate = uniqueDates.map((date) => {
+  const firstDataForEachDate = uniqueDates?.map((date) => {
     return data?.list.find((entry) => {
       const entryDate = new Date(entry.dt * 1000).toISOString().split("T")[0];
       return entryDate === date;
     });
   });
 
-  useEffect(() => {
-    refetch();
-  }, [place, refetch]);
-
   return (
-    <div className="flex flex-col gap-4 bg-gray-100 min-h-screen">
-      <Navbar
-        location={data ? `${data?.city?.name}, ${data?.city?.country}` : ""}
-      />
-      {isLoading || loadingCity ? (
-        <WeatherSkeleton />
-      ) : (
+    <Suspense fallback={<WeatherSkeleton />}>
+      {data ? (
         <main className="px-3 max-w-7xl mx-auto flex flex-col gap-9 w-full pb-10 pt-4">
           <section className="space-y-4">
             <div className="space-y-2">
@@ -137,10 +62,12 @@ export default function Home() {
                   </p>
                   <p className="text-xs space-x-2">
                     <span>
-                      {convertKelvinToCelsius(firstData?.main.temp_min ?? 0)}°↓
+                      {convertKelvinToCelsius(firstData?.main.temp_min ?? 0)}
+                      °↓
                     </span>
                     <span>
-                      {convertKelvinToCelsius(firstData?.main.temp_max ?? 0)}°↑
+                      {convertKelvinToCelsius(firstData?.main.temp_max ?? 0)}
+                      °↑
                     </span>
                   </p>
                 </div>
@@ -221,7 +148,11 @@ export default function Home() {
             ))}
           </section>
         </main>
+      ) : (
+        <main className="p-3 max-w-7xl mx-auto">
+          <h2 className="text-yellow-600 text-2xl">Data not found!</h2>
+        </main>
       )}
-    </div>
+    </Suspense>
   );
 }

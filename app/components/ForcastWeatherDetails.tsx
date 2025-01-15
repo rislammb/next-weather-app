@@ -1,4 +1,4 @@
-import { convertKelvinToCelsius } from "../utils/format";
+import { convertKelvinToCelsius } from "../lib/format";
 import Container from "./Container";
 import WeatherDetails, { WeatherDetailsProps } from "./WeatherDetails";
 import WeatherIcon from "./WeatherIcon";
