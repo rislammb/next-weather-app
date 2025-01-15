@@ -1,51 +1,14 @@
 import Link from "next/link";
 import { MdSunny } from "react-icons/md";
-import SearchBox from "./SearchBox";
 import MyLocation from "./MyLocation";
 import SearchedLocation from "./SearchedLocation";
-import SuggestionsBox from "./SuggestionsBox";
+import SearchLocation from "./SearchLocation";
 
-export default async function Navbar() {
-  // async function handleInputChange(value: string) {
-  //   setCity(value);
-  //   if (value.length > 2) {
-  //     try {
-  //       const response = await axios.get<WeatherApiResponse>(
-  //         `https://api.openweathermap.org/data/2.5/find?q=${value}&appid=${process.env.NEXT_PUBLIC_WEATHER_API_KEY}`
-  //       );
+interface NavbarProps {
+  location?: string;
+}
 
-  //       setError("");
-  //       setShowSuggestions(true);
-  //     } catch {
-  //       setSuggestions([]);
-  //       setShowSuggestions(false);
-  //     }
-  //   } else {
-  //     setSuggestions([]);
-  //     setShowSuggestions(false);
-  //   }
-  // }
-
-  // function handleSuggestionClick(name: string) {
-  //   setCity(name);
-  //   setShowSuggestions(false);
-  // }
-
-  // function handleSubmit() {
-  //   setLoadingCity(true);
-  //   if (suggestions.length < 1) {
-  //     setError("Location not found!");
-  //     setLoadingCity(false);
-  //   } else {
-  //     setError("");
-  //     setPlace(city);
-  //     setShowSuggestions(false);
-  //     setTimeout(() => {
-  //       setLoadingCity(false);
-  //     }, 500);
-  //   }
-  // }
-
+export default async function Navbar({ location }: NavbarProps) {
   return (
     <nav className="shadow-sm sticky top-0 left-0 z-50 bg-white">
       <div className="w-full flex justify-between items-center max-w-7xl p-3 mx-auto gap-2">
@@ -62,12 +25,9 @@ export default async function Navbar() {
         <section className="flex gap-2 items-start sm:items-center flex-col sm:flex-row">
           <div className="flex gap-2 items-center">
             <MyLocation />
-            <SearchedLocation />
+            <SearchedLocation location={location} />
           </div>
-          <div className="relative">
-            <SearchBox />
-            <SuggestionsBox />
-          </div>
+          <SearchLocation />
         </section>
       </div>
     </nav>

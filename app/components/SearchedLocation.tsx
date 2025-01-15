@@ -1,17 +1,14 @@
-"use client";
-
-import { useSearchParams } from "next/navigation";
 import { MdOutlineLocationOn } from "react-icons/md";
 
-export default function SearchedLocation() {
-  const searchParams = useSearchParams();
+interface SearchedLocationProps {
+  location?: string;
+}
 
+export default function SearchedLocation({ location }: SearchedLocationProps) {
   return (
     <>
       <MdOutlineLocationOn className="text-3xl" />
-      <p className="text-slate-900/80 text-sm">
-        {searchParams.get("place")?.toString()}
-      </p>
+      <p className="text-slate-900/80 text-sm max-w-[150px]">{location}</p>
     </>
   );
 }

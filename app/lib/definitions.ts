@@ -28,10 +28,10 @@ export type LocationData = {
       country: string;
     };
     rain?: {
-      [key: string]: number; // e.g., "1h": number
+      [key: string]: number;
     };
     snow?: {
-      [key: string]: number; // e.g., "1h": number
+      [key: string]: number;
     };
     clouds: {
       all: number;
@@ -97,3 +97,23 @@ export type WeatherData = {
     sunset: number;
   };
 };
+
+export interface WeatherDetailsProps {
+  visibility: string;
+  humidity: string;
+  windSpeed: string;
+  airPressure: string;
+  sunrise: string;
+  sunset: string;
+}
+
+export interface ForcastWeatherDetailsProps extends WeatherDetailsProps {
+  weatherIcon: string;
+  date: string;
+  day: string;
+  temp: number;
+  feels_like: number;
+  temp_min: number;
+  temp_max: number;
+  description: string;
+}

@@ -1,17 +1,9 @@
-import { ReactNode } from "react";
 import { FiDroplet } from "react-icons/fi";
 import { ImMeter } from "react-icons/im";
 import { LuEye, LuSunrise, LuSunset } from "react-icons/lu";
 import { MdAir } from "react-icons/md";
-
-export interface WeatherDetailsProps {
-  visibility: string;
-  humidity: string;
-  windSpeed: string;
-  airPressure: string;
-  sunrise: string;
-  sunset: string;
-}
+import SingleWeatherDetails from "./SingleWeatherDetails";
+import { WeatherDetailsProps } from "../lib/definitions";
 
 export default function WeatherDetails({
   visibility,
@@ -54,25 +46,5 @@ export default function WeatherDetails({
         value={sunset}
       />
     </>
-  );
-}
-
-interface SingleWeatherDetailsProps {
-  information: string;
-  icon: ReactNode;
-  value: string;
-}
-
-function SingleWeatherDetails({
-  information,
-  icon,
-  value,
-}: SingleWeatherDetailsProps) {
-  return (
-    <div className="flex flex-col justify-between gap-2 items-center text-xs font-semibold to-black/80">
-      <p className="whitespace-nowrap">{information}</p>
-      <div className="text-3xl">{icon}</div>
-      <p>{value}</p>
-    </div>
   );
 }

@@ -1,18 +1,8 @@
+import { ForcastWeatherDetailsProps } from "../lib/definitions";
 import { convertKelvinToCelsius } from "../lib/format";
 import Container from "./Container";
-import WeatherDetails, { WeatherDetailsProps } from "./WeatherDetails";
+import WeatherDetails from "./WeatherDetails";
 import WeatherIcon from "./WeatherIcon";
-
-interface ForcastWeatherDetailsProps extends WeatherDetailsProps {
-  weatherIcon: string;
-  date: string;
-  day: string;
-  temp: number;
-  feels_like: number;
-  temp_min: number;
-  temp_max: number;
-  description: string;
-}
 
 export default function ForcastWeatherDetails(
   props: ForcastWeatherDetailsProps
