@@ -165,7 +165,7 @@ export default function Home() {
                 </div>
               </Container>
             </div>
-            <div className="flex gap-4  flex-col sm:flex-row">
+            <div className="flex gap-4 flex-col sm:flex-row">
               <Container className="w-fit justify-center flex-col px-4 items-center">
                 <p className="capitalize text-center">
                   {firstData?.weather[0]?.description}
