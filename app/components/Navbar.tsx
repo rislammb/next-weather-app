@@ -3,7 +3,7 @@ import { MdMyLocation, MdOutlineLocationOn, MdSunny } from "react-icons/md";
 import SearchBox from "./SearchBox";
 import { useState } from "react";
 import axios from "axios";
-import { placeAtom } from "../atom";
+import { loadingCityAtom, placeAtom } from "../atom";
 import { useAtom } from "jotai";
 
 type WeatherApiResponse = {
@@ -59,6 +59,7 @@ export default function Navbar({ location }: { location: string }) {
   const [suggestions, setSuggestions] = useState<string[]>([]);
   const [showSuggestions, setShowSuggestions] = useState<boolean>(false);
   const [, setPlace] = useAtom(placeAtom);
+  const [, setLoadingCity] = useAtom(loadingCityAtom);
 
   async function handleInputChange(value: string) {
     setCity(value);
@@ -87,12 +88,17 @@ export default function Navbar({ location }: { location: string }) {
   }
 
   function handleSubmit() {
+    setLoadingCity(true);
     if (suggestions.length < 1) {
       setError("Location not found!");
+      setLoadingCity(false);
     } else {
       setError("");
       setPlace(city);
       setShowSuggestions(false);
+      setTimeout(() => {
+        setLoadingCity(false);
+      }, 500);
     }
   }
 

@@ -14,9 +14,10 @@ import {
 import WeatherIcon from "./components/WeatherIcon";
 import WeatherDetails from "./components/WeatherDetails";
 import ForcastWeatherDetails from "./components/ForcastWeatherDetails";
-import { placeAtom } from "./atom";
+import { loadingCityAtom, placeAtom } from "./atom";
 import { useAtom } from "jotai";
 import { useEffect } from "react";
+import WeatherSkeleton from "./components/WeatherSkeleton";
 
 type WeatherData = {
   cod: string;
@@ -73,6 +74,8 @@ type WeatherData = {
 
 export default function Home() {
   const [place] = useAtom(placeAtom);
+  const [loadingCity] = useAtom(loadingCityAtom);
+
   const { isLoading, data, refetch } = useQuery<WeatherData>(
     "weatherData",
     async () => {
@@ -109,10 +112,8 @@ export default function Home() {
       <Navbar
         location={data ? `${data?.city?.name}, ${data?.city?.country}` : ""}
       />
-      {isLoading ? (
-        <main className="flex-1 flex items-center justify-center">
-          <p className="animate-bounce">Loading...</p>
-        </main>
+      {isLoading || loadingCity ? (
+        <WeatherSkeleton />
       ) : (
         <main className="px-3 max-w-7xl mx-auto flex flex-col gap-9 w-full pb-10 pt-4">
           <section className="space-y-4">
@@ -123,7 +124,7 @@ export default function Home() {
                   ({format(firstData?.dt_txt ?? "", "dd.MM.yyyy")})
                 </span>
               </h1>
-              <Container className="gap-4 sm:gap-6 px-6 items-center">
+              <Container className="gap-4 sm:gap-6 px-6 items-center flex-col sm:flex-row">
                 <div className="flex flex-col px-4">
                   <h4 className="text-5xl">
                     {convertKelvinToCelsius(firstData?.main.temp ?? 0)}°
@@ -164,7 +165,7 @@ export default function Home() {
                 </div>
               </Container>
             </div>
-            <div className="flex gap-4">
+            <div className="flex gap-4  flex-col sm:flex-row">
               <Container className="w-fit justify-center flex-col px-4 items-center">
                 <p className="capitalize text-center">
                   {firstData?.weather[0]?.description}
@@ -195,7 +196,7 @@ export default function Home() {
             </div>
           </section>
           <section className="flex w-full flex-col gap-4">
-            <h2 className="text-2xl">Forcast (5 days)</h2>
+            <h2 className="text-2xl">Forcast</h2>
             {firstDataForEachDate.map((entry, index) => (
               <ForcastWeatherDetails
                 key={index}

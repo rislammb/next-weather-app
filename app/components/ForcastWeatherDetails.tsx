@@ -18,7 +18,7 @@ export default function ForcastWeatherDetails(
   props: ForcastWeatherDetailsProps
 ) {
   return (
-    <Container className="gap-4">
+    <Container className="gap-4 flex-col sm:flex-row">
       <section className="flex gap-4 items-center px-4">
         <div className="flex flex-col gap-1 items-center">
           <WeatherIcon iconName={props.weatherIcon} />
