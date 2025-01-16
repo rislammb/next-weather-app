@@ -117,3 +117,9 @@ export interface ForcastWeatherDetailsProps extends WeatherDetailsProps {
   temp_max: number;
   description: string;
 }
+
+export interface SuggestionsItem {
+  id: number;
+  name: string;
+  coord: { lat: number; lon: number };
+}

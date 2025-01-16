@@ -1,7 +1,6 @@
 "use client";
 
 import { MdMyLocation } from "react-icons/md";
-import { fetchMyLocation } from "../lib/data";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 
 export default function MyLocation() {
@@ -13,13 +12,14 @@ export default function MyLocation() {
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(async (position) => {
         const { latitude, longitude } = position.coords;
-        const name = await fetchMyLocation(latitude, longitude);
-
         const params = new URLSearchParams(searchParams);
-        if (name) {
-          params.set("place", name);
+        params.delete("place");
+        if (latitude && longitude) {
+          params.set("lat", latitude.toString());
+          params.set("lon", longitude.toString());
         } else {
-          params.delete("place");
+          params.delete("lat");
+          params.delete("lon");
         }
         replace(`${pathname}?${params.toString()}`);
       });

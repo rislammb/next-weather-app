@@ -6,7 +6,7 @@ import WeatherIcon from "./components/WeatherIcon";
 import WeatherDetails from "./components/WeatherDetails";
 import ForcastWeatherDetails from "./components/ForcastWeatherDetails";
 import WeatherSkeleton from "./components/WeatherSkeleton";
-import { fetchWeatherData } from "./lib/data";
+import { fetchWeatherByCoord, fetchWeatherData } from "./lib/data";
 import {
   convertKelvinToCelsius,
   convertWindSpeed,
@@ -19,8 +19,11 @@ interface HomeProps {
 }
 
 export default async function Home({ searchParams }: HomeProps) {
-  const place = (await searchParams).place;
-  const data = await fetchWeatherData(place ?? "");
+  const { place, lat, lon } = await searchParams;
+  const data =
+    lat && lon
+      ? await fetchWeatherByCoord(Number(lat), Number(lon))
+      : await fetchWeatherData(place ?? "");
 
   const firstData = data?.list[0];
 
@@ -81,10 +84,10 @@ export default async function Home({ searchParams }: HomeProps) {
                     </p>
                   </div>
                   <div className="flex gap-4 sm:gap-6 overflow-x-auto w-full justify-between pr-3">
-                    {data?.list?.map((item, index) => (
+                    {data?.list?.slice(0, 8).map((item, index) => (
                       <div
                         key={index}
-                        className="flex flex-col justify-between gap-2 items-center text-xs font-semibold"
+                        className="flex flex-col justify-between gap-1 items-center text-xs font-semibold"
                       >
                         <p className="whitespace-nowrap">
                           {format(item?.dt_txt, "h:mm a")}
@@ -95,6 +98,9 @@ export default async function Home({ searchParams }: HomeProps) {
                             item.dt_txt
                           )}
                         />
+                        <p className="capitalize leading-none text-center">
+                          {item?.weather[0]?.description}
+                        </p>
                         <p>{convertKelvinToCelsius(item?.main?.temp ?? 0)}°</p>
                       </div>
                     ))}

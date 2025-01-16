@@ -6,7 +6,7 @@ export async function fetchLocationData(
 ): Promise<LocationData | undefined> {
   try {
     const { data } = await axios.get(
-      `https://api.openweathermap.org/data/2.5/find?q=${place}&appid=${process.env.NEXT_PUBLIC_WEATHER_API_KEY}`
+      `https://api.openweathermap.org/data/2.5/find?q=${place}&appid=${process.env.NEXT_PUBLIC_WEATHER_API_KEY}&units=metric`
     );
     return data;
   } catch (error) {
@@ -17,6 +17,7 @@ export async function fetchLocationData(
 export async function fetchWeatherData(
   place: string
 ): Promise<WeatherData | undefined> {
+  if (place.length < 3) return;
   try {
     const { data } = await axios.get(
       `https://api.openweathermap.org/data/2.5/forecast?q=${place}&appid=${process.env.NEXT_PUBLIC_WEATHER_API_KEY}`
@@ -27,16 +28,16 @@ export async function fetchWeatherData(
   }
 }
 
-export async function fetchMyLocation(
+export async function fetchWeatherByCoord(
   latitude: number,
   longitude: number
-): Promise<string | undefined> {
+): Promise<WeatherData | undefined> {
   try {
     const { data } = await axios.get(
-      `https://api.openweathermap.org/data/2.5/weather?lat=${latitude}&lon=${longitude}&appid=${process.env.NEXT_PUBLIC_WEATHER_API_KEY}`
+      `http://api.openweathermap.org/data/2.5/forecast?lat=${latitude}&lon=${longitude}&appid=${process.env.NEXT_PUBLIC_WEATHER_API_KEY}`
     );
-    return data?.name;
+    return data;
   } catch (error) {
-    console.error("Failed to fetch my location:", error);
+    console.error("Failed to fetch weather by coord:", error);
   }
 }

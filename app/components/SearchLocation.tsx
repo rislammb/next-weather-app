@@ -7,6 +7,7 @@ import { MdSearch } from "react-icons/md";
 import SuggestionsBox from "./SuggestionsBox";
 import { fetchLocationData } from "../lib/data";
 import { cn } from "../lib/cn";
+import { SuggestionsItem } from "../lib/definitions";
 
 interface SearchBoxProps {
   className?: string;
@@ -18,15 +19,20 @@ export default function SearchLocation({ className }: SearchBoxProps) {
   const pathname = usePathname();
   const { replace } = useRouter();
   const [input, setInput] = useState<string>("");
-  const [inputForSearch, setInputForSearch] = useState<string>("");
-  const [suggestions, setSuggestions] = useState<string[]>([]);
+  const [suggestions, setSuggestions] = useState<SuggestionsItem[]>([]);
   const [showSuggestions, setShowSuggestions] = useState<boolean>(false);
 
   const fetchSuggestion = useDebouncedCallback(async () => {
     if (input?.length > 2) {
       const data = await fetchLocationData(input);
       if (data) {
-        setSuggestions(data?.list?.map((item) => item.name));
+        setSuggestions(
+          data?.list?.map((item) => ({
+            id: item.id,
+            name: `${item.name}, ${item?.sys.country}`,
+            coord: item.coord,
+          }))
+        );
         setShowSuggestions(true);
       }
     } else {
@@ -37,11 +43,12 @@ export default function SearchLocation({ className }: SearchBoxProps) {
 
   function handleClick(name: string) {
     setInput(name);
-    setInputForSearch(name);
     setShowSuggestions(false);
   }
 
   function handleSubmit() {
+    params.delete("lat");
+    params.delete("lon");
     if (input) {
       params.set("place", input);
     } else {
@@ -57,13 +64,6 @@ export default function SearchLocation({ className }: SearchBoxProps) {
   useEffect(() => {
     fetchSuggestion();
   }, [input]);
-
-  useEffect(() => {
-    if (inputForSearch) {
-      params.set("place", inputForSearch);
-    }
-    replace(`${pathname}?${params.toString()}`);
-  }, [inputForSearch]);
 
   return (
     <div className="relative">
