@@ -1,4 +1,4 @@
-# Next.js Weather app with OpenWeatherMap API
+# Next.js Weather App with OpenWeatherMap API
 
 The **Next.js Weather App** is a responsive and feature-rich application designed to provide real-time weather updates using the **OpenWeatherMap API**. Built with the latest features of **Next.js 15** and leveraging the **App Router** for optimized routing, this app ensures seamless performance and scalability.
 
