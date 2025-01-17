@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { ChangeEvent, useEffect, useState } from "react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useDebouncedCallback } from "use-debounce";
 import { MdSearch } from "react-icons/md";
@@ -22,6 +22,10 @@ export default function SearchLocation({ className }: SearchBoxProps) {
   const [suggestions, setSuggestions] = useState<SuggestionsItem[]>([]);
   const [showSuggestions, setShowSuggestions] = useState<boolean>(false);
 
+  const handleChange = (e: ChangeEvent<HTMLInputElement>) =>
+    setInput(e.target.value);
+  const handleFocus = () => setShowSuggestions(true);
+
   const fetchSuggestion = useDebouncedCallback(async () => {
     if (input?.length > 2) {
       const data = await fetchLocationData(input);
@@ -41,12 +45,12 @@ export default function SearchLocation({ className }: SearchBoxProps) {
     }
   }, 300);
 
-  function handleClick(name: string) {
+  const handleClick = (name: string) => {
     setInput(name);
     setShowSuggestions(false);
-  }
+  };
 
-  function handleSubmit() {
+  const handleSubmit = () => {
     params.delete("lat");
     params.delete("lon");
     if (input) {
@@ -55,7 +59,7 @@ export default function SearchLocation({ className }: SearchBoxProps) {
       params.delete("place");
     }
     replace(`${pathname}?${params.toString()}`);
-  }
+  };
 
   useEffect(() => {
     setInput(searchParams.get("place")?.toString() ?? "");
@@ -77,7 +81,8 @@ export default function SearchLocation({ className }: SearchBoxProps) {
         <input
           type="text"
           value={input}
-          onChange={(e) => setInput(e.target.value)}
+          onChange={handleChange}
+          onFocus={handleFocus}
           placeholder="Search location.."
           className="px-4 py-2 w-[170px] border border-gray-300 rounded-l-md focus:outline-none focus:border-blue-200 h-full"
         />

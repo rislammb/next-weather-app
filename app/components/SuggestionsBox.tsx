@@ -12,14 +12,14 @@ export default function SuggestionsBox({
   const pathname = usePathname();
   const { replace } = useRouter();
 
-  function handleClick(item: SuggestionsItem) {
+  const handleClick = (item: SuggestionsItem) => {
     const params = new URLSearchParams(searchParams);
     params.set("lat", item.coord.lat.toString());
     params.set("lon", item.coord.lon.toString());
     params.delete("place");
     replace(`${pathname}?${params.toString()}`);
     onClick(item.name);
-  }
+  };
 
   return (
     <ul className="mb-4 bg-white absolute border top-[44px] left-0 border-gray-300 rounded-md min-w-[200px] flex flex-col gap-1 p-2">

@@ -48,7 +48,17 @@ export default async function Home({ searchParams }: HomeProps) {
         location={data && `${data?.city?.name}, ${data?.city?.country}`}
       />
       <Suspense fallback={<WeatherSkeleton />}>
-        {data ? (
+        {!place && (!lat || !lon) ? (
+          <main className="p-3 max-w-7xl mx-auto">
+            <h2 className="text-yellow-600 text-2xl">
+              Search for a location to get weather information.
+            </h2>
+          </main>
+        ) : !data ? (
+          <main className="p-3 max-w-7xl mx-auto">
+            <h2 className="text-yellow-600 text-2xl">Data not found!</h2>
+          </main>
+        ) : (
           <main className="px-3 max-w-7xl mx-auto flex flex-col gap-9 w-full pb-10 pt-4">
             <section className="space-y-4">
               <div className="space-y-2">
@@ -165,10 +175,6 @@ export default async function Home({ searchParams }: HomeProps) {
                 />
               ))}
             </section>
-          </main>
-        ) : (
-          <main className="p-3 max-w-7xl mx-auto">
-            <h2 className="text-yellow-600 text-2xl">Data not found!</h2>
           </main>
         )}
       </Suspense>

@@ -8,7 +8,7 @@ export default function MyLocation() {
   const pathname = usePathname();
   const { replace } = useRouter();
 
-  function handleCurrentLocation() {
+  const handleCurrentLocation = () => {
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(async (position) => {
         const { latitude, longitude } = position.coords;
@@ -24,13 +24,13 @@ export default function MyLocation() {
         replace(`${pathname}?${params.toString()}`);
       });
     }
-  }
+  };
 
   return (
     <MdMyLocation
       title="Your current location"
       onClick={handleCurrentLocation}
-      className="text-2xl text-gray-500 hover:opacity-80 cursor-pointer transition-all"
+      className="text-2xl text-gray-700 hover:opacity-80 cursor-pointer transition-all"
     />
   );
 }
