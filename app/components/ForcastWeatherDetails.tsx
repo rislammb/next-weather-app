@@ -8,8 +8,8 @@ export default function ForcastWeatherDetails(
   props: ForcastWeatherDetailsProps
 ) {
   return (
-    <Container className="gap-4 flex-col sm:flex-row">
-      <section className="flex gap-4 items-center px-4">
+    <Container className="gap-4 flex-col items-center sm:items-stretch sm:flex-row">
+      <section className="flex gap-2 md:gap-4 items-center px-2 md:px-4">
         <div className="flex flex-col gap-1 items-center">
           <WeatherIcon iconName={props.weatherIcon} />
           <p>{props.date}</p>
@@ -24,7 +24,7 @@ export default function ForcastWeatherDetails(
           <p className="capitalize">{props.description}</p>
         </div>
       </section>
-      <section className="overflow-x-auto flex justify-between gap-4 px-4 w-full pr-10">
+      <section className="overflow-x-auto flex justify-between gap-1 md:gap-4 px-2 md:px-4 w-full">
         <WeatherDetails {...props} />
       </section>
     </Container>

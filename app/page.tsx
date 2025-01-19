@@ -68,8 +68,8 @@ export default async function Home({ searchParams }: HomeProps) {
                     ({format(firstData?.dt_txt ?? "", "dd.MM.yyyy")})
                   </span>
                 </h1>
-                <Container className="gap-4 sm:gap-6 px-6 items-center flex-col sm:flex-row">
-                  <div className="flex flex-col px-4">
+                <Container className="gap-2 md:gap-6 px-2 md:px-6 items-center flex-col sm:flex-row">
+                  <div className="flex flex-col mx-2 md:px-4">
                     <h4 className="text-5xl">
                       {convertKelvinToCelsius(firstData?.main.temp ?? 0)}°
                     </h4>
@@ -93,7 +93,7 @@ export default async function Home({ searchParams }: HomeProps) {
                       </span>
                     </p>
                   </div>
-                  <div className="flex gap-4 sm:gap-6 overflow-x-auto w-full justify-between pr-3">
+                  <div className="flex gap-2 md:gap-6 overflow-x-auto w-full justify-between pr-3">
                     {data?.list?.slice(0, 8).map((item, index) => (
                       <div
                         key={index}
@@ -108,7 +108,7 @@ export default async function Home({ searchParams }: HomeProps) {
                             item.dt_txt
                           )}
                         />
-                        <p className="capitalize leading-none text-center">
+                        <p className="capitalize leading-none text-center whitespace-nowrap">
                           {item?.weather[0]?.description}
                         </p>
                         <p>{convertKelvinToCelsius(item?.main?.temp ?? 0)}°</p>
@@ -117,7 +117,7 @@ export default async function Home({ searchParams }: HomeProps) {
                   </div>
                 </Container>
               </div>
-              <div className="flex gap-4 flex-col sm:flex-row">
+              <div className="flex gap-2 flex-col items-center sm:items-stretch sm:flex-row">
                 <Container className="w-fit justify-center flex-col px-4 items-center">
                   <p className="capitalize text-center">
                     {firstData?.weather[0]?.description}
@@ -129,7 +129,7 @@ export default async function Home({ searchParams }: HomeProps) {
                     )}
                   />
                 </Container>
-                <Container className="bg-yellow-300/80 px-6 gap-4 justify-between overflow-x-auto">
+                <Container className="bg-yellow-300/80 px-2 sm:px-6 gap-1 sm:gap-4 justify-between overflow-x-auto">
                   <WeatherDetails
                     visibility={metersToKilometers(firstData?.visibility ?? 0)}
                     humidity={`${firstData?.main?.humidity}%`}

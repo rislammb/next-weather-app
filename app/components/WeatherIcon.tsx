@@ -8,7 +8,12 @@ interface WeatherIconProps {
 
 export default function WeatherIcon({ iconName, className }: WeatherIconProps) {
   return (
-    <div className={cn("relative h-20 w-20", className)}>
+    <div
+      className={cn(
+        "relative h-12 w-12 sm:h-16 sm:w-16 md:h-20 md:w-20",
+        className
+      )}
+    >
       <Image
         width={100}
         height={100}
